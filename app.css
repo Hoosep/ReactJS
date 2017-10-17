@@ -92,11 +92,17 @@ body {
     color: #666;
   }
 
+
 .player {
   display: flex;
   font-size: 1.2em;
   border-bottom: solid 2px #444;
   letter-spacing: 2px;
+  background-color:green;
+}
+
+.player div:last-of-type{
+  border:none;
 }
 
   .remove-player {
