@@ -36,6 +36,72 @@ var Players = [
   }
 ];
 var nextId = 8;
+
+var Stopwatch = React.createClass({
+  getInitialState: function(){
+    return{
+      running: false,
+      elapsedTime: 0,
+      previousTime: 0,
+    }
+  },
+  componentDidMount: function() {
+    this.interval = setInterval(this.onTick,100);
+  },
+  componentWillUnmount: function() {
+    clearInteval(this.interval);
+  },
+  onTick: function(){
+    if(this.state.running){
+      var now = Date.now();
+      this.setState({
+        previousTime: now,
+        elapsedTime: this.state.elapsedTime + (now - this.state.previousTime),
+      });
+    }
+    console.log('onTick');
+  },
+  onStart: function(){
+    this.setState({
+      running: true,
+      previousTime: Date.now(),
+    });
+  },
+  onStop: function(){
+    this.setState({
+      running: false
+    });
+  },
+  onReset: function(){
+    this.setState({
+      elapsedTime:0,
+      previousTime: Date.now(),
+    });
+  },
+  render: function(){
+    var startStop;
+    var seconds = Math.floor(this.state.elapsedTime / 1000);
+    if(this.state.running){
+      startStop = <button onClick={this.onStop}>Stop</button>;
+    } else {
+      startStop = <button onClick={this.onStart}>Start</button>;
+    }
+    var style = {
+      display: 'block'
+    };
+    return (
+      <div className="stopwatch">
+        <h2>Stopwatch</h2>
+        <div className="stopwatch-time">
+          <div style={style}>{seconds}</div>
+          {startStop}
+          <button onClick={this.onReset}>Reset</button>
+        </div>
+      </div>
+    );
+  }
+});
+
 var AddPlayerForm = React.createClass({
   propTypes: {
     onAdd: React.PropTypes.func.isRequired,
@@ -95,6 +161,7 @@ function Header(props){
     <div className="header">
       <Stats players={props.players}/>
       <h1>{props.title}</h1>
+      <Stopwatch/>
     </div>
   );
 }
